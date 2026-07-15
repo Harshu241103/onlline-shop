@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShopEase — E-Commerce</title>
+  <style>
+    :root {
+      --primary: #0f766e;
+      --primary-hover: #0d9488;
+      --danger: #dc2626;
+      --danger-hover: #b91c1c;
+      --warning: #d97706;
+      --bg: #f0fdfa;
+      --card: #ffffff;
+      --text: #134e4a;
+      --muted: #5eead4;
+      --muted-text: #64748b;
+      --border: #ccfbf1;
+      --radius: 12px;
+      --shadow: 0 4px 14px rgba(15, 118, 110, 0.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow);
+    }
+    .logo {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--primary);
+      cursor: pointer;
+      letter-spacing: -0.03em;
+    }
+    .logo span { color: #14b8a6; }
+    nav {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    #userInfo {
+      font-size: 0.85rem;
+      color: var(--muted-text);
+      margin-right: 0.35rem;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 1.25rem;
+      height: 1.25rem;
+      padding: 0 0.35rem;
+      border-radius: 999px;
+      background: var(--danger);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      margin-left: 0.25rem;
+    }
+    button, .btn {
+      appearance: none;
+      border: none;
+      background: var(--primary);
+      color: white;
+      padding: 0.45rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+    button:hover, .btn:hover { background: var(--primary-hover); }
+    button:active { transform: scale(0.98); }
+    button.secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    button.secondary:hover { background: #f0fdfa; }
+    button.danger { background: var(--danger); }
+    button.danger:hover { background: var(--danger-hover); }
+    button.warning { background: var(--warning); }
+    button.sm { padding: 0.3rem 0.65rem; font-size: 0.78rem; }
+    button:disabled { opacity: 0.55; cursor: not-allowed; }
+    main {
+      flex: 1;
+      max-width: 1100px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.5rem 1.15rem 3rem;
+    }
+    h1 { font-size: 1.65rem; margin-bottom: 0.35rem; }
+    h2 { font-size: 1.25rem; margin-bottom: 0.85rem; }
+    .muted { color: var(--muted-text); font-size: 0.9rem; }
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.1rem;
+    }
+    .product-card {
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .product-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 24px rgba(15, 118, 110, 0.12);
+    }
+    .product-img {
+      height: 140px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      background: linear-gradient(135deg, #ccfbf1, #99f6e4);
+      margin-bottom: 0.85rem;
+    }
+    .product-card h3 {
+      font-size: 1.05rem;
+      margin-bottom: 0.25rem;
+      color: var(--text);
+    }
+    .price {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 0.35rem 0;
+    }
+    .stock {
+      font-size: 0.78rem;
+      color: var(--muted-text);
+      margin-bottom: 0.65rem;
+    }
+    .stock.out { color: var(--danger); font-weight: 600; }
+    .product-card .actions {
+      margin-top: auto;
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+    .form-group { margin-bottom: 1rem; }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      background: #fff;
+      color: var(--text);
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
+    }
+    textarea { min-height: 90px; resize: vertical; }
+    .error {
+      background: #fef2f2;
+      color: #b91c1c;
+      padding: 0.6rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+      border: 1px solid #fecaca;
+    }
+    .success {
+      background: #f0fdf4;
+      color: #15803d;
+      padding: 0.6rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+      border: 1px solid #bbf7d0;
+    }
+    .info {
+      background: #ecfeff;
+      color: #0e7490;
+      padding: 0.6rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+      border: 1px solid #a5f3fc;
+    }
+    .form-card { max-width: 420px; margin: 0 auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 0.7rem 0.6rem;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted-text);
+      background: #f0fdfa;
+    }
+    .table-wrap { overflow-x: auto; }
+    .cart-item {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      padding: 0.9rem 0;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .cart-item .emoji {
+      width: 56px;
+      height: 56px;
+      border-radius: 8px;
+      background: #ccfbf1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      flex-shrink: 0;
+    }
+    .cart-item .details { flex: 1; min-width: 140px; }
+    .qty-ctrl {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .qty-ctrl button {
+      width: 2rem;
+      height: 2rem;
+      padding: 0;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    .qty-ctrl span {
+      min-width: 1.5rem;
+      text-align: center;
+      font-weight: 700;
+    }
+    .totals {
+      margin-top: 1.25rem;
+      padding-top: 1rem;
+      border-top: 2px solid var(--border);
+      text-align: right;
+    }
+    .totals .grand {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .status {
+      display: inline-block;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .status.pending { background: #fef3c7; color: #b45309; }
+    .status.processing { background: #dbeafe; color: #1d4ed8; }
+    .status.shipped { background: #e0e7ff; color: #4338ca; }
+    .status.delivered { background: #d1fae5; color: #047857; }
+    .status.cancelled { background: #fee2e2; color: #b91c1c; }
+    .role-tag {
+      display: inline-block;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      background: #ccfbf1;
+      color: var(--primary);
+      text-transform: uppercase;
+    }
+    .role-tag.admin { background: #fef3c7; color: #b45309; }
+    .tabs {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.25rem;
+    }
+    .tabs button.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .empty-state {
+      text-align: center;
+      padding: 2.5rem 1rem;
+      color: var(--muted-text);
+    }
+    .empty-state h2 { color: var(--text); margin-bottom: 0.5rem; }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1rem;
+      color: var(--primary);
+      font-size: 0.9rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      font-weight: 600;
+    }
+    .back-link:hover { text-decoration: underline; background: none; }
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+    }
+    footer {
+      text-align: center;
+      padding: 1.1rem;
+      font-size: 0.78rem;
+      color: var(--muted-text);
+      border-top: 1px solid var(--border);
+      background: var(--card);
+    }
+    .order-card {
+      margin-bottom: 1rem;
+    }
+    .order-card .meta {
+      font-size: 0.82rem;
+      color: var(--muted-text);
+      margin: 0.35rem 0 0.75rem;
+    }
+    .order-items {
+      font-size: 0.88rem;
+      margin-bottom: 0.5rem;
+    }
+    .order-items li { margin-left: 1.1rem; margin-bottom: 0.2rem; }
+    @media (max-width: 600px) {
+      header { padding: 0.65rem 0.9rem; }
+      main { padding: 1.1rem 0.85rem 2rem; }
+      h1 { font-size: 1.4rem; }
+      .row-2 { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    }
+    @media (max-width: 400px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo" id="logoBtn">Shop<span>Ease</span></div>
+    <nav>
+      <span id="userInfo"></span>
+      <button id="shopBtn" class="secondary">Shop</button>
+      <button id="cartBtn" class="secondary">Cart<span class="badge" id="cartBadge" style="display:none">0</span></button>
+      <button id="ordersBtn" class="secondary" style="display:none">My Orders</button>
+      <button id="adminBtn" class="warning" style="display:none">Admin</button>
+      <button id="loginBtn">Login</button>
+      <button id="registerBtn" class="secondary">Register</button>
+      <button id="logoutBtn" class="secondary" style="display:none">Logout</button>
+    </nav>
+  </header>
+
+  <main id="app"></main>
+
+  <footer>
+    Single-file demo · Data in browser localStorage (simulates DB + APIs) · Not for production
+  </footer>
+
+  <script>
+    /* ========== Storage (simulates DB) ========== */
+    const KEYS = {
+      users: 'shop_users_v1',
+      products: 'shop_products_v1',
+      orders: 'shop_orders_v1',
+      session: 'shop_session_v1',
+      cart: 'shop_cart_v1'
+    };
+
+    function uid() {
+      return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+    }
+
+    function esc(t) {
+      if (t == null) return '';
+      const d = document.createElement('div');
+      d.textContent = String(t);
+      return d.innerHTML;
+    }
+
+    function money(n) {
+      return '$' + Number(n).toFixed(2);
+    }
+
+    function fmtDate(iso) {
+      try {
+        return new Date(iso).toLocaleString(undefined, {
+          year: 'numeric', month: 'short', day: 'numeric',
+          hour: '2-digit', minute: '2-digit'
+        });
+      } catch { return iso; }
+    }
+
+    function load(key, fb) {
+      try {
+        const r = localStorage.getItem(key);
+        return r ? JSON.parse(r) : fb;
+      } catch { return fb; }
+    }
+
+    function save(key, data) {
+      localStorage.setItem(key, JSON.stringify(data));
+    }
+
+    function getUsers() { return load(KEYS.users, []); }
+    function saveUsers(u) { save(KEYS.users, u); }
+    function getProducts() { return load(KEYS.products, []); }
+    function saveProducts(p) { save(KEYS.products, p); }
+    function getOrders() {
+      return load(KEYS.orders, []).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+    function saveOrders(o) { save(KEYS.orders, o); }
+    function getSession() { return load(KEYS.session, null); }
+    function setSession(user) {
+      if (user) save(KEYS.session, { id: user.id, username: user.username, role: user.role });
+      else localStorage.removeItem(KEYS.session);
+    }
+    function currentUser() { return getSession(); }
+    function isLoggedIn() { return !!currentUser(); }
+    function isAdmin() {
+      const u = currentUser();
+      return u && u.role === 'admin';
+    }
+
+    /* Cart is per-browser; keyed loosely to session user when present */
+    function cartKey() {
+      const u = currentUser();
+      return KEYS.cart + (u ? '_' + u.id : '_guest');
+    }
+    function getCart() { return load(cartKey(), []); }
+    function saveCart(c) { save(cartKey(), c); }
+
+    /* ========== Seed demo data ========== */
+    function seed() {
+      if (getUsers().length) return;
+
+      const adminId = uid();
+      const userId = uid();
+      saveUsers([
+        { id: adminId, username: 'admin', password: 'admin123', role: 'admin' },
+        { id: userId, username: 'customer', password: 'user123', role: 'user' }
+      ]);
+
+      saveProducts([
+        { id: uid(), name: 'Wireless Headphones', description: 'Noise-cancelling over-ear Bluetooth headphones with 30h battery.', price: 79.99, stock: 25, emoji: '🎧', category: 'Electronics' },
+        { id: uid(), name: 'Smart Watch', description: 'Fitness tracking, heart rate, notifications, waterproof.', price: 129.00, stock: 15, emoji: '⌚', category: 'Electronics' },
+        { id: uid(), name: 'Organic Coffee Beans', description: '1kg medium roast, single-origin, fair trade.', price: 18.50, stock: 40, emoji: '☕', category: 'Grocery' },
+        { id: uid(), name: 'Running Shoes', description: 'Lightweight breathable mesh, cushioned sole.', price: 89.99, stock: 20, emoji: '👟', category: 'Fashion' },
+        { id: uid(), name: 'Desk Lamp', description: 'LED lamp with adjustable brightness and color temperature.', price: 34.99, stock: 30, emoji: '💡', category: 'Home' },
+        { id: uid(), name: 'Backpack', description: 'Water-resistant laptop backpack with USB port.', price: 49.99, stock: 18, emoji: '🎒', category: 'Fashion' },
+        { id: uid(), name: 'Bluetooth Speaker', description: 'Portable waterproof speaker, 12h playtime.', price: 39.99, stock: 22, emoji: '🔊', category: 'Electronics' },
+        { id: uid(), name: 'Yoga Mat', description: 'Non-slip eco-friendly mat, 6mm thick.', price: 24.99, stock: 35, emoji: '🧘', category: 'Sports' }
+      ]);
+      saveOrders([]);
+    }
+
+    /* ========== Auth API (simulated) ========== */
+    function register(username, password) {
+      username = (username || '').trim();
+      if (username.length < 3) return { ok: false, error: 'Username must be at least 3 characters.' };
+      if ((password || '').length < 4) return { ok: false, error: 'Password must be at least 4 characters.' };
+      const users = getUsers();
+      if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
+        return { ok: false, error: 'Username already taken.' };
+      }
+      const user = { id: uid(), username, password, role: 'user' };
+      users.push(user);
+      saveUsers(users);
+      setSession(user);
+      return { ok: true };
+    }
+
+    function login(username, password) {
+      username = (username || '').trim();
+      const user = getUsers().find(u =>
+        u.username.toLowerCase() === username.toLowerCase() && u.password === password
+      );
+      if (!user) return { ok: false, error: 'Invalid username or password.' };
+      setSession(user);
+      return { ok: true };
+    }
+
+    function logout() { setSession(null); }
+
+    /* ========== Product API ========== */
+    function listProducts(filter) {
+      let list = getProducts();
+      if (filter && filter.category && filter.category !== 'all') {
+        list = list.filter(p => p.category === filter.category);
+      }
+      if (filter && filter.q) {
+        const q = filter.q.toLowerCase();
+        list = list.filter(p =>
+          p.name.toLowerCase().includes(q) ||
+          (p.description || '').toLowerCase().includes(q)
+        );
+      }
+      return list;
+    }
+
+    function getProduct(id) {
+      return getProducts().find(p => p.id === id) || null;
+    }
+
+    function createProduct(data) {
+      if (!isAdmin()) return { ok: false, error: 'Admin only.' };
+      const name = (data.name || '').trim();
+      const price = Number(data.price);
+      const stock = parseInt(data.stock, 10);
+      if (!name) return { ok: false, error: 'Name is required.' };
+      if (isNaN(price) || price < 0) return { ok: false, error: 'Invalid price.' };
+      if (isNaN(stock) || stock < 0) return { ok: false, error: 'Invalid stock.' };
+      const product = {
+        id: uid(),
+        name,
+        description: (data.description || '').trim(),
+        price,
+        stock,
+        emoji: (data.emoji || '📦').trim() || '📦',
+        category: (data.category || 'General').trim() || 'General'
+      };
+      const products = getProducts();
+      products.push(product);
+      saveProducts(products);
+      return { ok: true, product };
+    }
+
+    function updateProduct(id, data) {
+      if (!isAdmin()) return { ok: false, error: 'Admin only.' };
+      const products = getProducts();
+      const idx = products.findIndex(p => p.id === id);
+      if (idx === -1) return { ok: false, error: 'Product not found.' };
+      const name = (data.name || '').trim();
+      const price = Number(data.price);
+      const stock = parseInt(data.stock, 10);
+      if (!name) return { ok: false, error: 'Name is required.' };
+      if (isNaN(price) || price < 0) return { ok: false, error: 'Invalid price.' };
+      if (isNaN(stock) || stock < 0) return { ok: false, error: 'Invalid stock.' };
+      products[idx] = {
+        ...products[idx],
+        name,
+        description: (data.description || '').trim(),
+        price,
+        stock,
+        emoji: (data.emoji || products[idx].emoji || '📦').trim() || '📦',
+        category: (data.category || 'General').trim() || 'General'
+      };
+      saveProducts(products);
+      return { ok: true, product: products[idx] };
+    }
+
+    function deleteProduct(id) {
+      if (!isAdmin()) return { ok: false, error: 'Admin only.' };
+      const products = getProducts();
+      if (!products.some(p => p.id === id)) return { ok: false, error: 'Product not found.' };
+      saveProducts(products.filter(p => p.id !== id));
+      // remove from all carts? keep simple — leave cart lines; checkout will re-check stock
+      return { ok: true };
+    }
+
+    /* ========== Cart ========== */
+    function cartCount() {
+      return getCart().reduce((s, i) => s + i.qty, 0);
+    }
+
+    function addToCart(productId, qty) {
+      qty = parseInt(qty, 10) || 1;
+      if (qty < 1) return { ok: false, error: 'Invalid quantity.' };
+      const p = getProduct(productId);
+      if (!p) return { ok: false, error: 'Product not found.' };
+      if (p.stock < 1) return { ok: false, error: 'Out of stock.' };
+      const cart = getCart();
+      const existing = cart.find(i => i.productId === productId);
+      const newQty = (existing ? existing.qty : 0) + qty;
+      if (newQty > p.stock) return { ok: false, error: 'Only ' + p.stock + ' in stock.' };
+      if (existing) existing.qty = newQty;
+      else cart.push({ productId, qty });
+      saveCart(cart);
+      return { ok: true };
+    }
+
+    function setCartQty(productId, qty) {
+      qty = parseInt(qty, 10);
+      const cart = getCart();
+      const idx = cart.findIndex(i => i.productId === productId);
+      if (idx === -1) return { ok: false, error: 'Not in cart.' };
+      if (qty <= 0) {
+        cart.splice(idx, 1);
+        saveCart(cart);
+        return { ok: true };
+      }
+      const p = getProduct(productId);
+      if (!p) {
+        cart.splice(idx, 1);
+        saveCart(cart);
+        return { ok: true };
+      }
+      if (qty > p.stock) return { ok: false, error: 'Only ' + p.stock + ' in stock.' };
+      cart[idx].qty = qty;
+      saveCart(cart);
+      return { ok: true };
+    }
+
+    function removeFromCart(productId) {
+      saveCart(getCart().filter(i => i.productId !== productId));
+      return { ok: true };
+    }
+
+    function clearCart() { saveCart([]); }
+
+    function cartDetails() {
+      const lines = [];
+      let total = 0;
+      getCart().forEach(item => {
+        const p = getProduct(item.productId);
+        if (!p) return;
+        const lineTotal = p.price * item.qty;
+        total += lineTotal;
+        lines.push({
+          productId: p.id,
+          name: p.name,
+          emoji: p.emoji,
+          price: p.price,
+          qty: item.qty,
+          stock: p.stock,
+          lineTotal
+        });
+      });
+      return { lines, total };
+    }
+
+    /* ========== Orders API ========== */
+    function checkout(shipping) {
+      const user = currentUser();
+      if (!user) return { ok: false, error: 'Please login to checkout.' };
+      if (user.role === 'admin') return { ok: false, error: 'Admin accounts cannot place orders. Use a customer account.' };
+
+      const name = (shipping.name || '').trim();
+      const address = (shipping.address || '').trim();
+      const city = (shipping.city || '').trim();
+      const phone = (shipping.phone || '').trim();
+      if (!name || !address || !city || !phone) {
+        return { ok: false, error: 'All shipping fields are required.' };
+      }
+
+      const { lines, total } = cartDetails();
+      if (!lines.length) return { ok: false, error: 'Cart is empty.' };
+
+      // validate stock again
+      for (const line of lines) {
+        const p = getProduct(line.productId);
+        if (!p || p.stock < line.qty) {
+          return { ok: false, error: '"' + line.name + '" has insufficient stock.' };
+        }
+      }
+
+      // decrement stock
+      const products = getProducts();
+      lines.forEach(line => {
+        const idx = products.findIndex(p => p.id === line.productId);
+        if (idx !== -1) products[idx].stock -= line.qty;
+      });
+      saveProducts(products);
+
+      const order = {
+        id: uid(),
+        userId: user.id,
+        username: user.username,
+        items: lines.map(l => ({
+          productId: l.productId,
+          name: l.name,
+          price: l.price,
+          qty: l.qty,
+          lineTotal: l.lineTotal
+        })),
+        total,
+        shipping: { name, address, city, phone },
+        status: 'pending',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+
+      const orders = getOrders();
+      orders.unshift(order);
+      saveOrders(orders);
+      clearCart();
+      return { ok: true, order };
+    }
+
+    function getUserOrders() {
+      const user = currentUser();
+      if (!user) return [];
+      return getOrders().filter(o => o.userId === user.id);
+    }
+
+    function getAllOrders() {
+      if (!isAdmin()) return [];
+      return getOrders();
+    }
+
+    function updateOrderStatus(orderId, status) {
+      if (!isAdmin()) return { ok: false, error: 'Admin only.' };
+      const allowed = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+      if (!allowed.includes(status)) return { ok: false, error: 'Invalid status.' };
+      const orders = getOrders();
+      const idx = orders.findIndex(o => o.id === orderId);
+      if (idx === -1) return { ok: false, error: 'Order not found.' };
+      orders[idx].status = status;
+      orders[idx].updatedAt = new Date().toISOString();
+      saveOrders(orders);
+      return { ok: true, order: orders[idx] };
+    }
+
+    /* ========== UI state ========== */
+    let view = 'shop'; // shop | cart | checkout | orders | login | register | admin | productForm
+    let formError = '';
+    let formSuccess = '';
+    let adminTab = 'products'; // products | orders
+    let editingProductId = null;
+    let shopFilter = { q: '', category: 'all' };
+    let lastOrderId = null;
+
+    function go(v, extra) {
+      view = v;
+      formError = '';
+      formSuccess = '';
+      if (v === 'productForm') editingProductId = extra || null;
+      if (v !== 'productForm') editingProductId = null;
+      render();
+    }
+
+    /* ========== Nav ========== */
+    function updateNav() {
+      const user = currentUser();
+      const info = document.getElementById('userInfo');
+      const loginBtn = document.getElementById('loginBtn');
+      const registerBtn = document.getElementById('registerBtn');
+      const logoutBtn = document.getElementById('logoutBtn');
+      const ordersBtn = document.getElementById('ordersBtn');
+      const adminBtn = document.getElementById('adminBtn');
+      const badge = document.getElementById('cartBadge');
+
+      if (user) {
+        info.innerHTML = 'Hi, <strong>' + esc(user.username) + '</strong> ' +
+          '<span class="role-tag ' + (user.role === 'admin' ? 'admin' : '') + '">' + esc(user.role) + '</span>';
+        loginBtn.style.display = 'none';
+        registerBtn.style.display = 'none';
+        logoutBtn.style.display = '';
+        ordersBtn.style.display = user.role === 'user' ? '' : 'none';
+        adminBtn.style.display = user.role === 'admin' ? '' : 'none';
+      } else {
+        info.textContent = '';
+        loginBtn.style.display = '';
+        registerBtn.style.display = '';
+        logoutBtn.style.display = 'none';
+        ordersBtn.style.display = 'none';
+        adminBtn.style.display = 'none';
+      }
+
+      const n = cartCount();
+      if (n > 0) {
+        badge.style.display = '';
+        badge.textContent = String(n);
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+
+    /* ========== Render ========== */
+    function render() {
+      updateNav();
+      const app = document.getElementById('app');
+      if (view === 'shop') renderShop(app);
+      else if (view === 'cart') renderCart(app);
+      else if (view === 'checkout') renderCheckout(app);
+      else if (view === 'orders') renderOrders(app);
+      else if (view === 'login') renderLogin(app);
+      else if (view === 'register') renderRegister(app);
+      else if (view === 'admin') renderAdmin(app);
+      else if (view === 'productForm') renderProductForm(app);
+      else if (view === 'orderSuccess') renderOrderSuccess(app);
+    }
+
+    function categories() {
+      const set = {};
+      getProducts().forEach(p => { set[p.category || 'General'] = true; });
+      return Object.keys(set).sort();
+    }
+
+    function renderShop(app) {
+      const products = listProducts(shopFilter);
+      const cats = categories();
+
+      let html = '<h1>Product Catalog</h1>' +
+        '<p class="muted" style="margin-bottom:1.15rem">Browse items and add them to your cart.</p>';
+
+      html += '<div class="card" style="margin-bottom:1.25rem;padding:0.9rem">' +
+        '<div class="row-2">' +
+        '<div class="form-group" style="margin:0">' +
+        '<label for="searchQ">Search</label>' +
+        '<input id="searchQ" type="search" placeholder="Search products…" value="' + esc(shopFilter.q) + '">' +
+        '</div>' +
+        '<div class="form-group" style="margin:0">' +
+        '<label for="catFilter">Category</label>' +
+        '<select id="catFilter"><option value="all">All categories</option>';
+      cats.forEach(c => {
+        html += '<option value="' + esc(c) + '"' + (shopFilter.category === c ? ' selected' : '') + '>' + esc(c) + '</option>';
+      });
+      html += '</select></div></div></div>';
+
+      if (!products.length) {
+        html += '<div class="empty-state card"><h2>No products found</h2><p>Try another search or category.</p></div>';
+      } else {
+        html += '<div class="grid">';
+        products.forEach(p => {
+          const out = p.stock < 1;
+          html += '<article class="card product-card">' +
+            '<div class="product-img">' + esc(p.emoji || '📦') + '</div>' +
+            '<h3>' + esc(p.name) + '</h3>' +
+            '<div class="muted" style="font-size:0.8rem">' + esc(p.category) + '</div>' +
+            '<p class="muted" style="font-size:0.85rem;margin-top:0.35rem;flex:1">' +
+            esc((p.description || '').slice(0, 80)) + ((p.description || '').length > 80 ? '…' : '') + '</p>' +
+            '<div class="price">' + money(p.price) + '</div>' +
+            '<div class="stock ' + (out ? 'out' : '') + '">' + (out ? 'Out of stock' : p.stock + ' in stock') + '</div>' +
+            '<div class="actions">' +
+            '<button class="add-btn" data-id="' + esc(p.id) + '"' + (out ? ' disabled' : '') + '>Add to cart</button>' +
+            '</div></article>';
+        });
+        html += '</div>';
+      }
+      app.innerHTML = html;
+
+      document.getElementById('searchQ').addEventListener('input', (e) => {
+        shopFilter.q = e.target.value;
+        render();
+        const el = document.getElementById('searchQ');
+        if (el) { el.focus(); el.selectionStart = el.selectionEnd = el.value.length; }
+      });
+      document.getElementById('catFilter').addEventListener('change', (e) => {
+        shopFilter.category = e.target.value;
+        render();
+      });
+      app.querySelectorAll('.add-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const res = addToCart(btn.dataset.id, 1);
+          if (res.ok) {
+            formSuccess = 'Added to cart!';
+            updateNav();
+            // brief toast via re-render top info
+            const tip = document.createElement('div');
+            tip.className = 'success';
+            tip.style.cssText = 'position:fixed;top:70px;right:16px;z-index:200;max-width:240px';
+            tip.textContent = 'Added to cart!';
+            document.body.appendChild(tip);
+            setTimeout(() => tip.remove(), 1500);
+          } else {
+            alert(res.error);
+          }
+        });
+      });
+    }
+
+    function renderCart(app) {
+      const { lines, total } = cartDetails();
+      let html = '<h1>Shopping Cart</h1>' +
+        '<p class="muted" style="margin-bottom:1.15rem">Review items before checkout.</p>';
+
+      if (formError) html += '<div class="error">' + esc(formError) + '</div>';
+      if (formSuccess) html += '<div class="success">' + esc(formSuccess) + '</div>';
+
+      if (!lines.length) {
+        html += '<div class="empty-state card"><h2>Your cart is empty</h2>' +
+          '<p>Browse the shop and add something you like.</p>' +
+          '<button id="goShop" style="margin-top:1rem">Continue shopping</button></div>';
+        app.innerHTML = html;
+        document.getElementById('goShop').addEventListener('click', () => go('shop'));
+        return;
+      }
+
+      html += '<div class="card">';
+      lines.forEach(l => {
+        html += '<div class="cart-item">' +
+          '<div class="emoji">' + esc(l.emoji || '📦') + '</div>' +
+          '<div class="details">' +
+          '<strong>' + esc(l.name) + '</strong><br>' +
+          '<span class="muted">' + money(l.price) + ' each · max ' + l.stock + '</span>' +
+          '</div>' +
+          '<div class="qty-ctrl">' +
+          '<button class="secondary qty-minus" data-id="' + esc(l.productId) + '">−</button>' +
+          '<span>' + l.qty + '</span>' +
+          '<button class="secondary qty-plus" data-id="' + esc(l.productId) + '">+</button>' +
+          '</div>' +
+          '<div style="font-weight:700;min-width:4.5rem;text-align:right">' + money(l.lineTotal) + '</div>' +
+          '<button class="danger sm remove-btn" data-id="' + esc(l.productId) + '">Remove</button>' +
+          '</div>';
+      });
+      html += '<div class="totals">' +
+        '<div class="muted">Subtotal</div>' +
+        '<div class="grand">' + money(total) + '</div>' +
+        '<div class="actions" style="justify-content:flex-end;margin-top:1rem">' +
+        '<button class="secondary" id="continueShop">Continue shopping</button>' +
+        '<button id="toCheckout">Proceed to checkout</button>' +
+        '</div></div></div>';
+
+      app.innerHTML = html;
+
+      document.getElementById('continueShop').addEventListener('click', () => go('shop'));
+      document.getElementById('toCheckout').addEventListener('click', () => {
+        if (!isLoggedIn()) { go('login'); return; }
+        if (isAdmin()) {
+          formError = 'Admin accounts cannot place orders. Login as a customer (e.g. customer / user123).';
+          render();
+          return;
+        }
+        go('checkout');
+      });
+      app.querySelectorAll('.qty-minus').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const line = getCart().find(i => i.productId === btn.dataset.id);
+          if (line) setCartQty(btn.dataset.id, line.qty - 1);
+          render();
+        });
+      });
+      app.querySelectorAll('.qty-plus').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const line = getCart().find(i => i.productId === btn.dataset.id);
+          if (line) {
+            const res = setCartQty(btn.dataset.id, line.qty + 1);
+            if (!res.ok) alert(res.error);
+          }
+          render();
+        });
+      });
+      app.querySelectorAll('.remove-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          removeFromCart(btn.dataset.id);
+          render();
+        });
+      });
+    }
+
+    function renderCheckout(app) {
+      if (!isLoggedIn() || isAdmin()) {
+        go('cart');
+        return;
+      }
+      const { lines, total } = cartDetails();
+      if (!lines.length) { go('cart'); return; }
+
+      let html = '<button class="back-link" id="backCart">← Back to cart</button>' +
+        '<h1>Checkout</h1>' +
+        '<p class="muted" style="margin-bottom:1.15rem">Enter shipping details to place your order.</p>';
+
+      if (formError) html += '<div class="error">' + esc(formError) + '</div>';
+
+      html += '<div class="row-2" style="align-items:start">' +
+        '<div class="card">' +
+        '<h2>Shipping</h2>' +
+        '<form id="checkoutForm">' +
+        '<div class="form-group"><label for="shipName">Full name</label>' +
+        '<input id="shipName" required autocomplete="name"></div>' +
+        '<div class="form-group"><label for="shipAddr">Address</label>' +
+        '<input id="shipAddr" required autocomplete="street-address"></div>' +
+        '<div class="form-group"><label for="shipCity">City</label>' +
+        '<input id="shipCity" required autocomplete="address-level2"></div>' +
+        '<div class="form-group"><label for="shipPhone">Phone</label>' +
+        '<input id="shipPhone" required autocomplete="tel"></div>' +
+        '<div class="info">Payment is simulated — no real charges. Click Place Order to complete.</div>' +
+        '<button type="submit">Place Order · ' + money(total) + '</button>' +
+        '</form></div>' +
+        '<div class="card">' +
+        '<h2>Order summary</h2>';
+      lines.forEach(l => {
+        html += '<div style="display:flex;justify-content:space-between;gap:0.5rem;margin-bottom:0.5rem;font-size:0.9rem">' +
+          '<span>' + esc(l.emoji) + ' ' + esc(l.name) + ' × ' + l.qty + '</span>' +
+          '<strong>' + money(l.lineTotal) + '</strong></div>';
+      });
+      html += '<div class="totals"><div class="muted">Total</div><div class="grand">' + money(total) + '</div></div>' +
+        '</div></div>';
+
+      app.innerHTML = html;
+      document.getElementById('backCart').addEventListener('click', () => go('cart'));
+      document.getElementById('checkoutForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        formError = '';
+        const res = checkout({
+          name: document.getElementById('shipName').value,
+          address: document.getElementById('shipAddr').value,
+          city: document.getElementById('shipCity').value,
+          phone: document.getElementById('shipPhone').value
+        });
+        if (res.ok) {
+          lastOrderId = res.order.id;
+          go('orderSuccess');
+        } else {
+          formError = res.error;
+          render();
+        }
+      });
+    }
+
+    function renderOrderSuccess(app) {
+      const orders = getOrders();
+      const order = orders.find(o => o.id === lastOrderId);
+      let html = '<div class="card form-card" style="text-align:center;max-width:480px">' +
+        '<div style="font-size:3rem;margin-bottom:0.5rem">✅</div>' +
+        '<h1>Order placed!</h1>' +
+        '<p class="muted" style="margin:0.75rem 0 1.25rem">Thank you. Your order has been received.</p>';
+      if (order) {
+        html += '<p><strong>Order ID:</strong> ' + esc(order.id) + '</p>' +
+          '<p><strong>Total:</strong> ' + money(order.total) + '</p>' +
+          '<p><strong>Status:</strong> <span class="status ' + esc(order.status) + '">' + esc(order.status) + '</span></p>';
+      }
+      html += '<div class="actions" style="justify-content:center;margin-top:1.25rem">' +
+        '<button id="okOrders">View my orders</button>' +
+        '<button class="secondary" id="okShop">Back to shop</button>' +
+        '</div></div>';
+      app.innerHTML = html;
+      document.getElementById('okOrders').addEventListener('click', () => go('orders'));
+      document.getElementById('okShop').addEventListener('click', () => go('shop'));
+    }
+
+    function renderOrders(app) {
+      if (!isLoggedIn() || isAdmin()) {
+        go('shop');
+        return;
+      }
+      const orders = getUserOrders();
+      let html = '<h1>My Orders</h1>' +
+        '<p class="muted" style="margin-bottom:1.15rem">Track your purchases.</p>';
+
+      if (!orders.length) {
+        html += '<div class="empty-state card"><h2>No orders yet</h2>' +
+          '<p>When you checkout, orders will show up here.</p>' +
+          '<button id="goShop2" style="margin-top:1rem">Shop now</button></div>';
+        app.innerHTML = html;
+        document.getElementById('goShop2').addEventListener('click', () => go('shop'));
+        return;
+      }
+
+      orders.forEach(o => {
+        html += '<div class="card order-card">' +
+          '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem">' +
+          '<strong>Order ' + esc(o.id) + '</strong>' +
+          '<span class="status ' + esc(o.status) + '">' + esc(o.status) + '</span></div>' +
+          '<div class="meta">' + fmtDate(o.createdAt) + ' · ' + money(o.total) +
+          ' · ' + esc(o.shipping.city) + '</div>' +
+          '<ul class="order-items">';
+        o.items.forEach(it => {
+          html += '<li>' + esc(it.name) + ' × ' + it.qty + ' — ' + money(it.lineTotal) + '</li>';
+        });
+        html += '</ul>' +
+          '<div class="muted" style="font-size:0.82rem">Ship to: ' + esc(o.shipping.name) + ', ' +
+          esc(o.shipping.address) + ', ' + esc(o.shipping.city) + ' · ' + esc(o.shipping.phone) + '</div></div>';
+      });
+      app.innerHTML = html;
+    }
+
+    function renderLogin(app) {
+      app.innerHTML = '<div class="card form-card">' +
+        '<h1>Login</h1>' +
+        '<p class="muted" style="margin-bottom:1rem">Demo accounts below.</p>' +
+        '<div class="info"><strong>admin</strong> / admin123 (Admin)<br><strong>customer</strong> / user123 (User)</div>' +
+        (formError ? '<div class="error">' + esc(formError) + '</div>' : '') +
+        '<form id="loginForm">' +
+        '<div class="form-group"><label for="loginUser">Username</label>' +
+        '<input id="loginUser" autocomplete="username" required></div>' +
+        '<div class="form-group"><label for="loginPass">Password</label>' +
+        '<input id="loginPass" type="password" autocomplete="current-password" required></div>' +
+        '<div class="actions">' +
+        '<button type="submit">Login</button>' +
+        '<button type="button" class="secondary" id="toReg">Register</button>' +
+        '</div></form></div>';
+
+      document.getElementById('loginForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        formError = '';
+        const res = login(
+          document.getElementById('loginUser').value,
+          document.getElementById('loginPass').value
+        );
+        if (res.ok) go(isAdmin() ? 'admin' : 'shop');
+        else { formError = res.error; render(); }
+      });
+      document.getElementById('toReg').addEventListener('click', () => go('register'));
+    }
+
+    function renderRegister(app) {
+      app.innerHTML = '<div class="card form-card">' +
+        '<h1>Register</h1>' +
+        '<p class="muted" style="margin-bottom:1rem">New accounts are regular users (not admin).</p>' +
+        (formError ? '<div class="error">' + esc(formError) + '</div>' : '') +
+        '<form id="regForm">' +
+        '<div class="form-group"><label for="regUser">Username</label>' +
+        '<input id="regUser" autocomplete="username" required minlength="3"></div>' +
+        '<div class="form-group"><label for="regPass">Password</label>' +
+        '<input id="regPass" type="password" autocomplete="new-password" required minlength="4"></div>' +
+        '<div class="form-group"><label for="regPass2">Confirm password</label>' +
+        '<input id="regPass2" type="password" autocomplete="new-password" required></div>' +
+        '<div class="actions">' +
+        '<button type="submit">Create account</button>' +
+        '<button type="button" class="secondary" id="toLogin">Login</button>' +
+        '</div></form></div>';
+
+      document.getElementById('regForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        formError = '';
+        const p1 = document.getElementById('regPass').value;
+        const p2 = document.getElementById('regPass2').value;
+        if (p1 !== p2) { formError = 'Passwords do not match.'; render(); return; }
+        const res = register(document.getElementById('regUser').value, p1);
+        if (res.ok) go('shop');
+        else { formError = res.error; render(); }
+      });
+      document.getElementById('toLogin').addEventListener('click', () => go('login'));
+    }
+
+    function renderAdmin(app) {
+      if (!isAdmin()) { go('shop'); return; }
+
+      let html = '<h1>Admin Panel</h1>' +
+        '<p class="muted" style="margin-bottom:1rem">Manage products and track all orders.</p>' +
+        '<div class="tabs">' +
+        '<button class="secondary' + (adminTab === 'products' ? ' active' : '') + '" id="tabProducts">Products</button>' +
+        '<button class="secondary' + (adminTab === 'orders' ? ' active' : '') + '" id="tabOrders">Orders</button>' +
+        '</div>';
+
+      if (formError) html += '<div class="error">' + esc(formError) + '</div>';
+      if (formSuccess) html += '<div class="success">' + esc(formSuccess) + '</div>';
+
+      if (adminTab === 'products') {
+        html += '<div class="actions" style="margin-bottom:1rem">' +
+          '<button id="newProduct">+ Add product</button></div>';
+        const products = getProducts();
+        if (!products.length) {
+          html += '<div class="empty-state card"><h2>No products</h2><p>Add your first product.</p></div>';
+        } else {
+          html += '<div class="card table-wrap"><table><thead><tr>' +
+            '<th></th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Actions</th>' +
+            '</tr></thead><tbody>';
+          products.forEach(p => {
+            html += '<tr>' +
+              '<td style="font-size:1.4rem">' + esc(p.emoji || '📦') + '</td>' +
+              '<td><strong>' + esc(p.name) + '</strong></td>' +
+              '<td>' + esc(p.category) + '</td>' +
+              '<td>' + money(p.price) + '</td>' +
+              '<td>' + p.stock + '</td>' +
+              '<td><button class="secondary sm edit-p" data-id="' + esc(p.id) + '">Edit</button> ' +
+              '<button class="danger sm del-p" data-id="' + esc(p.id) + '">Delete</button></td></tr>';
+          });
+          html += '</tbody></table></div>';
+        }
+      } else {
+        const orders = getAllOrders();
+        if (!orders.length) {
+          html += '<div class="empty-state card"><h2>No orders yet</h2><p>Orders from customers will appear here.</p></div>';
+        } else {
+          html += '<div class="card table-wrap"><table><thead><tr>' +
+            '<th>Order</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th><th>Update</th>' +
+            '</tr></thead><tbody>';
+          orders.forEach(o => {
+            html += '<tr>' +
+              '<td><strong style="font-size:0.8rem">' + esc(o.id) + '</strong><br>' +
+              '<span class="muted" style="font-size:0.75rem">' + o.items.length + ' item(s)</span></td>' +
+              '<td>' + esc(o.username) + '<br><span class="muted" style="font-size:0.75rem">' +
+              esc(o.shipping.city) + '</span></td>' +
+              '<td>' + money(o.total) + '</td>' +
+              '<td><span class="status ' + esc(o.status) + '">' + esc(o.status) + '</span></td>' +
+              '<td style="font-size:0.8rem">' + fmtDate(o.createdAt) + '</td>' +
+              '<td><select class="status-sel" data-id="' + esc(o.id) + '" style="min-width:120px;padding:0.35rem">' +
+              ['pending', 'processing', 'shipped', 'delivered', 'cancelled'].map(s =>
+                '<option value="' + s + '"' + (o.status === s ? ' selected' : '') + '>' + s + '</option>'
+              ).join('') +
+              '</select></td></tr>';
+            html += '<tr><td colspan="6" style="font-size:0.82rem;color:var(--muted-text);padding-top:0">' +
+              o.items.map(it => esc(it.name) + ' ×' + it.qty).join(' · ') +
+              ' · ' + esc(o.shipping.name) + ', ' + esc(o.shipping.address) +
+              '</td></tr>';
+          });
+          html += '</tbody></table></div>';
+        }
+      }
+
+      app.innerHTML = html;
+
+      document.getElementById('tabProducts').addEventListener('click', () => {
+        adminTab = 'products'; formError = ''; formSuccess = ''; render();
+      });
+      document.getElementById('tabOrders').addEventListener('click', () => {
+        adminTab = 'orders'; formError = ''; formSuccess = ''; render();
+      });
+
+      const newBtn = document.getElementById('newProduct');
+      if (newBtn) newBtn.addEventListener('click', () => go('productForm', null));
+
+      app.querySelectorAll('.edit-p').forEach(btn => {
+        btn.addEventListener('click', () => go('productForm', btn.dataset.id));
+      });
+      app.querySelectorAll('.del-p').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (!confirm('Delete this product?')) return;
+          const res = deleteProduct(btn.dataset.id);
+          if (res.ok) { formSuccess = 'Product deleted.'; render(); }
+          else { formError = res.error; render(); }
+        });
+      });
+      app.querySelectorAll('.status-sel').forEach(sel => {
+        sel.addEventListener('change', () => {
+          const res = updateOrderStatus(sel.dataset.id, sel.value);
+          if (res.ok) { formSuccess = 'Order status updated.'; render(); }
+          else { formError = res.error; render(); }
+        });
+      });
+    }
+
+    function renderProductForm(app) {
+      if (!isAdmin()) { go('shop'); return; }
+      const isEdit = !!editingProductId;
+      let p = null;
+      if (isEdit) {
+        p = getProduct(editingProductId);
+        if (!p) { formError = 'Product not found.'; go('admin'); return; }
+      }
+
+      app.innerHTML = '<button class="back-link" id="cancelProd">← Back to admin</button>' +
+        '<div class="card form-card" style="max-width:520px">' +
+        '<h1>' + (isEdit ? 'Edit product' : 'New product') + '</h1>' +
+        (formError ? '<div class="error">' + esc(formError) + '</div>' : '') +
+        '<form id="prodForm">' +
+        '<div class="form-group"><label for="pName">Name</label>' +
+        '<input id="pName" required value="' + (isEdit ? esc(p.name) : '') + '"></div>' +
+        '<div class="form-group"><label for="pDesc">Description</label>' +
+        '<textarea id="pDesc">' + (isEdit ? esc(p.description) : '') + '</textarea></div>' +
+        '<div class="row-2">' +
+        '<div class="form-group"><label for="pPrice">Price</label>' +
+        '<input id="pPrice" type="number" min="0" step="0.01" required value="' + (isEdit ? p.price : '') + '"></div>' +
+        '<div class="form-group"><label for="pStock">Stock</label>' +
+        '<input id="pStock" type="number" min="0" step="1" required value="' + (isEdit ? p.stock : '') + '"></div>' +
+        '</div>' +
+        '<div class="row-2">' +
+        '<div class="form-group"><label for="pCat">Category</label>' +
+        '<input id="pCat" list="catList" value="' + (isEdit ? esc(p.category) : 'General') + '">' +
+        '<datalist id="catList">' +
+        categories().map(c => '<option value="' + esc(c) + '">').join('') +
+        '<option value="Electronics"><option value="Fashion"><option value="Home"><option value="Grocery"><option value="Sports">' +
+        '</datalist></div>' +
+        '<div class="form-group"><label for="pEmoji">Emoji icon</label>' +
+        '<input id="pEmoji" maxlength="4" value="' + (isEdit ? esc(p.emoji) : '📦') + '"></div>' +
+        '</div>' +
+        '<div class="actions">' +
+        '<button type="submit">' + (isEdit ? 'Save changes' : 'Create product') + '</button>' +
+        '<button type="button" class="secondary" id="cancelProd2">Cancel</button>' +
+        '</div></form></div>';
+
+      const back = () => { adminTab = 'products'; go('admin'); };
+      document.getElementById('cancelProd').addEventListener('click', back);
+      document.getElementById('cancelProd2').addEventListener('click', back);
+      document.getElementById('prodForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        formError = '';
+        const data = {
+          name: document.getElementById('pName').value,
+          description: document.getElementById('pDesc').value,
+          price: document.getElementById('pPrice').value,
+          stock: document.getElementById('pStock').value,
+          category: document.getElementById('pCat').value,
+          emoji: document.getElementById('pEmoji').value
+        };
+        const res = isEdit ? updateProduct(editingProductId, data) : createProduct(data);
+        if (res.ok) {
+          formSuccess = isEdit ? 'Product updated.' : 'Product created.';
+          adminTab = 'products';
+          go('admin');
+          formSuccess = isEdit ? 'Product updated.' : 'Product created.';
+          render();
+        } else {
+          formError = res.error;
+          render();
+        }
+      });
+    }
+
+    /* ========== Header wiring ========== */
+    document.getElementById('logoBtn').addEventListener('click', () => go('shop'));
+    document.getElementById('shopBtn').addEventListener('click', () => go('shop'));
+    document.getElementById('cartBtn').addEventListener('click', () => go('cart'));
+    document.getElementById('ordersBtn').addEventListener('click', () => go('orders'));
+    document.getElementById('adminBtn').addEventListener('click', () => {
+      adminTab = 'products';
+      go('admin');
+    });
+    document.getElementById('loginBtn').addEventListener('click', () => go('login'));
+    document.getElementById('registerBtn').addEventListener('click', () => go('register'));
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      logout();
+      go('shop');
+    });
+
+    /* ========== Boot ========== */
+    seed();
+    render();
+  </script>
+</body>
+</html>
